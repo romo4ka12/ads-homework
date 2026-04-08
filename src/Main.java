@@ -8,6 +8,9 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        list.add(new BankAccount("101", "Ali", 15000));
+        list.add(new BankAccount("102", "Aruzhan", 34000));
+
         // Task 6
         Task6();
 
