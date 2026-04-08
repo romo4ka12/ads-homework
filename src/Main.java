@@ -1,152 +1,297 @@
+import java.util.Scanner;
+
 public class Main {
+    private static MyLinkedList list = new MyLinkedList();
+    private static MyStack history = new MyStack();
+    private static MyQueue bills = new MyQueue();
+    private static AccountQueue adminQueue = new AccountQueue();
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-//        Task 1
-//         printDigitsOfNumber(5123);
-//
-//        Task 2
-//        int n = 5;
-//        double average = sum(n, new int[] {3,5,2,8,4}) / (double) n;
-//        System.out.println(average);
-//
-//        Task 3
-//        System.out.println(isPrime(15));
-//
-//        Task 4
-//        System.out.println(fact(5));
-//
-//        Task 5
-//        System.out.println(fibonacci(7));
-//
-//        Task 6
-//        System.out.println(power(2,4));
-//
-//        Task 7
-//        reverse(4, new int[] {1,2,3,4});
-//
-//        Task 8
-//        System.out.println(isDigits("1234a5"));
-//
-//        Task 9
-//        System.out.println(charNum("123abc"));
-//
-//        Task 10
-//        System.out.println(GCD(142,48));
-    }
+        // Task 6
+        Task6();
 
-    static void printDigitsOfNumber(int n){
-        if (n == 0){
-            return;
-        }
-        else {
-            printDigitsOfNumber(n / 10);
-            System.out.println(n % 10);
-        }
-    }
+        while (true) {
+            System.out.println("\n Menu");
+            System.out.println("1 - Enter Bank");
+            System.out.println("2 - Enter ATM");
+            System.out.println("3 - Admin Area");
+            System.out.println("4 - Exit");
+            System.out.print("Select an option: ");
 
-    static int sum(int n, int[] numbers){
-        if(n == 0){
-            return 0;
-        }
-        else {
-            return numbers[n-1] + sum(n - 1, numbers);
-        }
-
-    }
-
-
-    static boolean isPrime(int n){
-        return check(n,n);
-    }
-
-    static boolean check(int number, int n){
-        if((n - 1) == 1){
-            return true;
-        }
-        else{
-            if(number % (n-1) == 0) {
-                return false;
-            }
-            else{
-                return check(number, n - 1);
+            int choice = getIntInput();
+            switch (choice) {
+                case 1: bankMenu(); break;
+                case 2: atmMenu(); break;
+                case 3: adminMenu(); break;
+                case 4:
+                    System.out.println("Exiting system...");
+                    return;
+                default:
+                    System.out.println("Invalid option. Try again.");
             }
         }
     }
 
-    static int fact(int n){
-        if(n <= 1){
-            return 1;
-        }
-        else{
-            return fact(n - 1) * n;
-        }
-    }
-
-    static int fibonacci(int n){
-        if(n == 0) {
-            return 0;
-        }
-        if(n == 1){
-            return 1;
-        }
-        else{
-            return fibonacci(n - 1) + fibonacci(n - 2);
+    // Task 6 (arrays)
+    public static void Task6() {
+        BankAccount[] accounts = new BankAccount[2];
+        accounts[0] = new BankAccount("101", "Ali", 15000);
+        accounts[1] = new BankAccount("102", "Aruzhan", 34000);
+        for (BankAccount acc : accounts) {
+            System.out.println("Physical Storage: " + acc);
         }
     }
 
-    static int power(int a, int n) {
-        if(n == 0){
-            return 1;
-        }
-        if(n == 1){
-            return a;
-        }
-        else{
-            return a * power(a, n-1);
-        }
+    // Bank menu
+    private static void bankMenu() {
+        while (true) {
+            System.out.println("\nBank");
+            System.out.println("1. Request New Account\n2. Deposit\n3. Withdraw\n4. Undo Last Transaction\n5. Back");
+            int choice = getIntInput();
 
+            if (choice == 1) {
+                System.out.print("Enter name for new account: ");
+                String name = scanner.nextLine();
+                adminQueue.enqueue(new BankAccount("GEN-" + (int)(Math.random()*100), name, 0));
+            } else if (choice == 2) {
+                System.out.print("Username: ");
+                String name = scanner.nextLine();
+                System.out.print("Amount: ");
+                double amt = getDoubleInput();
+                list.deposit(name, amt);
+                history.push("Deposit " + amt + " to " + name);
+            } else if (choice == 3) {
+                System.out.print("Username: ");
+                String name = scanner.nextLine();
+                System.out.print("Amount: ");
+                double amt = getDoubleInput();
+                list.withdraw(name, amt);
+                history.push("Withdraw " + amt + " from " + name);
+            } else if (choice == 4) {
+                System.out.print("Undoing last action: ");
+                history.pop();
+            } else if (choice == 5) break;
+        }
     }
 
-    static void reverse(int n, int[] numbers){
-        if(n == 1){
-            System.out.println(numbers[0]);
+    // ATM Menu
+    private static void atmMenu() {
+        System.out.print("\nEnter username: ");
+        String name = scanner.nextLine();
+        BankAccount acc = list.getByUsername(name);
+        if (acc == null) {
+            System.out.println("Account not found.");
             return;
         }
-        else{
-            System.out.println(numbers[n-1]);
-            reverse(n-1, numbers);
+        while (true) {
+            System.out.println("\nATM");
+            System.out.println("1. Balance Enquiry\n2.Withdraw\n3. Back");
+            int choice = getIntInput();
+            if (choice == 1) System.out.println("Current balance: " + acc.getBalance());
+            else if (choice == 2) {
+                list.withdraw(name, 1000);
+                history.push("ATM Withdraw 1000 by " + name);
+            } else if (choice == 3) break;
         }
     }
 
-    static String isDigits(String text){
-        if (text == "") {
-            return "Yes";
+    // Admin menu
+    private static void adminMenu() {
+        while (true) {
+            System.out.println("\nAdmin");
+            System.out.println("1. Process Account Request\n2. View/Pay Bills\n3. Display All Accounts\n4. Back");
+            int choice = getIntInput();
+            if (choice == 1) {
+                if (!adminQueue.isEmpty()) {
+                    BankAccount approved = adminQueue.dequeue();
+                    list.add(approved);
+                    System.out.println("Approved account for: " + approved.getUsername());
+                } else System.out.println("No pending requests.");
+            } else if (choice == 2) {
+                bills.display();
+                bills.dequeue();
+            } else if (choice == 3) {
+                list.displayAll();
+            } else if (choice == 4) break;
         }
-        if(!Character.isDigit(text.charAt(0))){
-            return "No";
-        }
-        else{
-            return isDigits(text.substring(1));
-        }
-
     }
 
-    static int charNum(String text){
-        if(text == ""){
-            return 0;
+    // Inputs
+    private static int getIntInput() {
+        int val = scanner.nextInt();
+        scanner.nextLine();
+        return val;
+    }
+
+    private static double getDoubleInput() {
+        double val = scanner.nextDouble();
+        scanner.nextLine();
+        return val;
+    }
+
+    public static class MyLinkedList {
+        private Node head;
+        private Node tail;
+
+        private static class Node {
+            BankAccount data;
+            Node next;
+            Node(BankAccount data) { this.data = data; }
         }
-        else{
-            return charNum(text.substring(1)) + 1;
+
+        public void add(BankAccount newData) {
+            Node newNode = new Node(newData);
+            if (head == null) { head = tail = newNode; }
+            else { tail.next = newNode; tail = newNode; }
+        }
+
+        public void displayAll() {
+            Node current = head;
+            while (current != null) {
+                System.out.println(current.data.toString());
+                current = current.next;
+            }
+        }
+
+        public BankAccount getByUsername(String username) {
+            Node current = head;
+            while (current != null) {
+                if (current.data.username.equals(username)) { return current.data; }
+                current = current.next;
+            }
+            return null;
+        }
+
+        public void deposit(String username, double amount) {
+            Node current = head;
+            while (current != null) {
+                if (current.data.getUsername().equals(username)) {
+                    current.data.setBalance(current.data.getBalance() + amount);
+                    System.out.println("You deposited " + amount);
+                    System.out.println("Your new balance is " + current.data.getBalance());
+                    return;
+                }
+                current = current.next;
+            }
+            System.out.println("Account not found");
+        }
+
+        public void withdraw(String username, double amount) {
+            Node current = head;
+            while (current != null) {
+                if (current.data.getUsername().equals(username)) {
+                    if (amount <= current.data.getBalance()) {
+                        current.data.setBalance(current.data.getBalance() - amount);
+                        System.out.println(amount + " has been withdrawn");
+                        System.out.println("Current balance - " + current.data.getBalance());
+                    } else {
+                        System.out.println("Not enough funds");
+                    }
+                    return;
+                }
+                current = current.next;
+            }
         }
     }
 
-    static int GCD(int a, int b){
-        if(a % b == 0){
-            return b;
+    public static class MyStack {
+        private static class Node {
+            String data;
+            Node next;
+            Node(String transaction) { this.data = transaction; }
         }
-        else{
-            return GCD(b,a % b);
+        Node head;
+        public void push(String newData) {
+            Node newNode = new Node(newData);
+            newNode.next = head;
+            head = newNode;
         }
+        public void pop() {
+            if (head == null) { System.out.println("Stack is empty"); return; }
+            System.out.println("Removed: " + head.data);
+            head = head.next;
         }
-
+        public void peek() {
+            if (head == null) System.out.println("Stack is empty");
+            else System.out.println(head.data);
+        }
     }
+
+    private static class MyQueue {
+        private static class Node {
+            String billName;
+            Node next;
+            Node(String billName) { this.billName = billName; }
+        }
+        private Node front;
+        private Node rear;
+        public void enqueue(String billName) {
+            Node newNode = new Node(billName);
+            if (rear == null) { front = rear = newNode; }
+            else { rear.next = newNode; rear = newNode; }
+            System.out.println("Bill enqueued");
+        }
+        public void dequeue() {
+            if (front == null) { System.out.println("Queue is empty"); return; }
+            System.out.println("Processing bill: " + front.billName);
+            front = front.next;
+            if (front == null) rear = null;
+        }
+        public void display() {
+            if (front == null) { System.out.println("No bills"); return; }
+            Node current = front;
+            System.out.print("Bills: ");
+            while (current != null) {
+                System.out.print("[" + current.billName + "] ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+
+    private static class AccountQueue {
+        class AccountRequestNode {
+            BankAccount accountData;
+            AccountRequestNode next;
+            public AccountRequestNode(BankAccount accountData) { this.accountData = accountData; }
+        }
+        private AccountRequestNode front;
+        private AccountRequestNode rear;
+        public void enqueue(BankAccount account) {
+            AccountRequestNode newNode = new AccountRequestNode(account);
+            if (rear == null) { front = rear = newNode; }
+            else { rear.next = newNode; rear = newNode; }
+            System.out.println("Request submitted for: " + account.getUsername());
+        }
+        public BankAccount dequeue() {
+            if (front == null) return null;
+            BankAccount account = front.accountData;
+            front = front.next;
+            if (front == null) rear = null;
+            return account;
+        }
+        public boolean isEmpty() { return front == null; }
+    }
+}
+
+class BankAccount {
+    String accountNumber;
+    String username;
+    double balance;
+
+    public BankAccount(String accountNumber, String username, double balance) {
+        this.accountNumber = accountNumber;
+        this.username = username;
+        this.balance = balance;
+    }
+    public String getAccountNumber() { return accountNumber; }
+    public String getUsername() { return username; }
+    public double getBalance() { return balance; }
+    public void setBalance(double balance) { this.balance = balance; }
+
+    @Override
+    public String toString() {
+        return username + " (Acc: " + accountNumber + ") – Balance: " + balance;
+    }
+}
