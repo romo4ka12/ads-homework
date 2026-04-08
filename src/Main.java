@@ -10,7 +10,8 @@ public class Main {
     public static void main(String[] args) {
         list.add(new BankAccount("101", "Ali", 15000));
         list.add(new BankAccount("102", "Aruzhan", 34000));
-
+        bills.enqueue("Electricity Bill");
+        bills.enqueue("Internet Bill");
         // Task 6
         Task6();
 
@@ -103,7 +104,7 @@ public class Main {
     private static void adminMenu() {
         while (true) {
             System.out.println("\nAdmin");
-            System.out.println("1. Process Account Request\n2. View/Pay Bills\n3. Display All Accounts\n4. Back");
+            System.out.println("1. Process Account Request\n2. View/Process Bills\n3. Display All Accounts\n4. Back");
             int choice = getIntInput();
             if (choice == 1) {
                 if (!adminQueue.isEmpty()) {
