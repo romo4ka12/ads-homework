@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         list.add(new BankAccount("101", "Ali", 15000));
         list.add(new BankAccount("102", "Aruzhan", 34000));
-        bills.enqueue("Electricity Bill");
+        bills.enqueue("Electricity Bill ");
         bills.enqueue("Internet Bill");
         // Task 6
         Task6();
