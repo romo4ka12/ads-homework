@@ -21,23 +21,18 @@ public class Main {
 
 class Sorter {
     public void basicSort(int[] arr) {
-        for (int i = 1; i < arr.length; i++) {
-            int key = arr[i];
+        for(int i = 1; i < arr.length; i++){
             int j = i - 1;
-
-            while (j >= 0 && arr[j] > key) {
-                arr[j + 1] = arr[j];
-                j = j - 1;
+            int temp = arr[i];
+            while(j >=  0 && arr[j] > temp){
+                arr[j+1] = arr[j];
+                j--;
             }
-            arr[j + 1] = key;
+            arr[j + 1] = temp;
         }
     }
 
-    public void advancedSort(int[] arr) {
-        sort(arr);
-    }
-
-    public void sort(int[] x) {
+    public void advancedSort(int[] x) {
         sort(x, 0, x.length - 1);
     }
 
@@ -95,11 +90,8 @@ class Sorter {
     }
 
     public void printArray(int[] arr) {
-        for (int i = 0; i < Math.min(arr.length, 15); i++) {
+        for(int i = 0; i < arr.length; i++) {
             System.out.print(arr[i] + " ");
-        }
-        if (arr.length > 15) {
-            System.out.print("... [" + arr.length + " elements]");
         }
         System.out.println();
     }
@@ -187,11 +179,11 @@ class Experiment {
             long basicSortedTime = measureSortTime(sortedArr, "basic");
             long advancedSortedTime = measureSortTime(sortedArr, "advanced");
 
-            System.out.println("[Input Data: Random]");
+            System.out.println("Input Data: Random");
             System.out.println("  Basic Sort (Insertion): " + basicRandomTime + " ns");
             System.out.println("  Advanced Sort (Merge):  " + advancedRandomTime + " ns");
 
-            System.out.println("[Input Data: Sorted]");
+            System.out.println("Input Data: Sorted");
             System.out.println("  Basic Sort (Insertion): " + basicSortedTime + " ns");
             System.out.println("  Advanced Sort (Merge):  " + advancedSortedTime + " ns");
 
@@ -199,7 +191,7 @@ class Experiment {
             int target = sortedArr[size / 2];
             long searchTime = measureSearchTime(sortedArr, target);
 
-            System.out.println("[Search: Binary Search]");
+            System.out.println("Search: Binary Search");
             System.out.println("  Search Time: " + searchTime + " ns\n");
         }
     }
