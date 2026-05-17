@@ -9,7 +9,7 @@ DFS was slightly faster because it avoids managing an explicit Java queue object
 Yes. The time increases smoothly which again shows linear dependency.\
 **How does graph structure affect traversal order?**\
 The arrangement of edges changes the path the algorithm takes. 
-If the graph has loops, both algorithms need a `Visited` set, 
+If the graph has loops, both algorithms need a 'Visited' set, 
 or the program will get stuck in an infinite loop. \
 **When is BFS preferred over DFS?**\
 BFS is preferred when you need to find the shortest path 
