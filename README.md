@@ -26,7 +26,7 @@ and lines connecting them called edges.
 Graphs help us model networks like roads on a map. 
 Vertices represent objects where each vertex has a unique number identifier. 
 Edges represent the connections between objects.Graph traversal is the process of visiting every 
-vertex in the graph and we use two main methods for this which are BFS and DFS. \
+vertex in the graph and we use two main methods for this which are BFS and DFS.
 
 ## B. Class Description
 Our program is divided into 5 simple classes:
